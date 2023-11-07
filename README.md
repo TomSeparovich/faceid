@@ -1,3 +1,33 @@
+# Description
+This project is being to developed to allow for the batch automation of photos
+being grouped based on the faces within the image. The project will use face-api.js
+
+Current Features:
+
+Potential Features:
+    File upload
+    Bulk file upload
+    Alternate file types ie .heic, need to verify if works on its own
+
+    Facial recognition
+    Face library
+    Firebase backend for face library?
+
+    Image grouping/tagging based on recognised faces
+    To be processed stack for unrecognised faces
+
+    Creating new entries based on the face library
+    Viewing the face library
+    Image cropping to mimimise waste within the face library
+    Adding to the face library
+    Verifying faces match within the face library
+
+
+To be considered:
+    Animal detection
+    Similar photo detection
+    Video detection
+
 # React + TypeScript + Vite
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
