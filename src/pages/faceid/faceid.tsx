@@ -14,7 +14,10 @@ const FaceID: React.FC = () => {
             <div>
                 <h2>Select Files</h2>
                 <input type="file" onChange={handleFileChange} multiple />
-                <button type="submit">Upload</button>
+                <button type="submit">Process</button>
+                <p>*Should work for file types JPEG, PNG, GIF, BMP, WebP, SVG</p>
+                <p>**Other types will need additional testing i.e heic</p>
+                <p>***This button does nothing currently</p>
             </div>
             <div>
                 <h2>Selected Files:</h2>

@@ -7,6 +7,7 @@ Current Features:
 Potential Features:
     File upload
     Bulk file upload
+    Alternate file types ie .heic, need to verify if works on its own
 
     Facial recognition
     Face library
@@ -25,6 +26,7 @@ Potential Features:
 To be considered:
     Animal detection
     Similar photo detection
+    Video detection
 
 # React + TypeScript + Vite
 
