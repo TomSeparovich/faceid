@@ -11,6 +11,7 @@ import './index.css'
 
 const router = createBrowserRouter([
   {
+    //May end up changing home to being the default child and having the parent element just be the side bar
     path: "/",
     element: <Home />,
     errorElement: <ErrorPage />,
