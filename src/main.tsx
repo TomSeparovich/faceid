@@ -5,7 +5,7 @@ import {
   RouterProvider,
 } from 'react-router-dom';
 
-import { FaceID, Home } from './pages/index.ts';
+import { Home, ImageProcessing } from './pages/index.ts';
 import ErrorPage from './pages/error/error.tsx';
 import './index.css'
 
@@ -17,8 +17,8 @@ const router = createBrowserRouter([
     errorElement: <ErrorPage />,
     children: [
       {
-        path: "faceid",
-        element: <FaceID />
+        path: "imageprocessing",
+        element: <ImageProcessing />
       },
     ],
   },

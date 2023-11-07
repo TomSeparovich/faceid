@@ -10,10 +10,10 @@ const Home: React.FC = () => {
             <nav>
               <ul>
                 <li>
-                  <Link to={`faceid`}>FaceID</Link>
+                    <Link to={''}>Home</Link>
                 </li>
                 <li>
-                    <Link to={''}>Home</Link>
+                  <Link to={`imageprocessing`}>FaceID</Link>
                 </li>
               </ul>
             </nav>
