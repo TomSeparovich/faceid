@@ -8,6 +8,7 @@ import {
 import { FaceID, Home } from './pages/index.ts';
 import ErrorPage from './pages/error/error.tsx';
 import './index.css'
+import { FireBaseProvider } from './providers/firebase.tsx';
 
 const router = createBrowserRouter([
   {
@@ -26,6 +27,8 @@ const router = createBrowserRouter([
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    <RouterProvider router={router} />
+    <FireBaseProvider>
+      <RouterProvider router={router} />
+    </FireBaseProvider>
   </React.StrictMode>
 )
