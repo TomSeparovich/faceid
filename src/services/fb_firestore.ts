@@ -34,7 +34,7 @@ const createNewProfile = async(fName : string, lName : string) => {
     }
 };
 
-const addImageRef = async(profile : string, ref : string) => {
+const addImageRef = async(ref : string, profile : string) => {
     try{
         const profileRef = doc(db, 'faceid', profile);
         await updateDoc(profileRef, {

@@ -2,6 +2,11 @@ div {
     border: 10px red;
 }
 
+img {
+    max-height: 400px;
+    margin: 5px;
+}
+
 .body{
     display: flex;
     justify-content: space-between;

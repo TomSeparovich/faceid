@@ -1,8 +1,9 @@
 import './dbmanage.css';
 
 import { useEffect, useState } from "react";
-import { createNewProfile, getProfileData, getProfiles } from "../../services/fb_firestore";
+import { addImageRef, createNewProfile, getProfileData, getProfiles } from "../../services/fb_firestore";
 import Profile from '../../interfaces/profile';
+import { uploadImage } from '../../services/fb_storage';
 
 
 const DbManage: React.FC = () => {
@@ -26,10 +27,6 @@ const DbManage: React.FC = () => {
         setSelectedProfile(profile);
     }
 
-    const uploadImages = async() => {
-
-    }
-
     const getProfiles = async () => {
         try {
           const data = await getProfileData();
@@ -37,22 +34,40 @@ const DbManage: React.FC = () => {
         } catch (error) {
           console.error('Error fetching data:', error);
         }
-      };
+    };
 
-    const createProfile = () => {
+    const createProfile = async() => {
         try{
             if(fName == null) throw new Error('First Name is null');
             if(lName == null) throw new Error('Last Name is null');
-            createNewProfile(fName, lName).then(() => {
-                getProfiles();
-            })
+            await createNewProfile(fName, lName);
+            getProfiles();
         } catch(error){
             console.log('Failed to create new profile: ', error);
             throw error;
         }
     }
 
+    const uploadImages = async() => {
+        try{
+            if(selectedProfile == null) throw new Error('No selected profile');
+            if(selectedFiles == null) throw new Error('No selected files');
 
+            for(const file of selectedFiles){
+                const profile = `${selectedProfile.fName}${selectedProfile.lName}`;
+                const ref = await uploadImage(file, profile);
+                await addImageRef(ref, profile);
+            }
+            getProfiles();
+
+            setSelectedProfile(profileList?.find(
+                (profile) => profile.fName === selectedProfile.fName && profile.lName === selectedProfile.lName)
+                ?? null);
+        } catch(error){
+            console.log('Failed to upload image: ', error);
+            throw error;
+        }
+    };
 
     return (
         <div className="body">
@@ -71,11 +86,9 @@ const DbManage: React.FC = () => {
                 </div>
                 <div>
                     <h2>Stored Images</h2>
-                    {selectedProfile?.imageRefs ? (
-                        <div></div>
-                    ) : (
-                        <div></div>
-                    )}
+                    {selectedProfile?.imageRefs?.map((file, index) => (
+                        <img src={file} alt={`Uploaded Image ${index}`} key={index} />
+                    ))}
                     <p>{selectedProfile?.fName} {selectedProfile?.lName}</p>
                 </div>
             </div>
