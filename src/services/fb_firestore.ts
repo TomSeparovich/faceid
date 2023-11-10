@@ -1,16 +1,16 @@
 import { arrayRemove, arrayUnion, collection, doc, getDocs, setDoc, updateDoc } from "firebase/firestore";
 import { firebase } from "../providers/firebase";
-import Profile, { profileConverter } from "../interfaces/idProfile";
+import Profile, { profileConverter } from "../interfaces/profile";
 const { db } = firebase;
 
 //Functions for downloading
-const getIds = async() => {
+const getProfiles = async() => {
     const idsRef = collection(db, 'faceid');
     return await getDocs(idsRef);
 };
 
-const getIdData = async() => {
-    const docs = await getIds();
+const getProfileData = async() => {
+    const docs = await getProfiles();
     const data: Profile[] = [];
 
     docs.forEach((doc) => {
@@ -21,10 +21,10 @@ const getIdData = async() => {
 };
 
 //Function for uploading
-const createNewID = async(fName : string, lName : string) => {
+const createNewProfile = async(fName : string, lName : string) => {
     try{
-        const idRef = doc(db, 'faceid', `${fName}${lName}`);
-        await setDoc(idRef, {
+        const profileRef = doc(db, 'faceid', `${fName}${lName}`);
+        await setDoc(profileRef, {
             fName: fName,
             lName: lName,
         }, { merge: true });
@@ -34,10 +34,10 @@ const createNewID = async(fName : string, lName : string) => {
     }
 };
 
-const addImageRef = async(id : string, ref : string) => {
+const addImageRef = async(profile : string, ref : string) => {
     try{
-        const idRef = doc(db, 'faceid', id);
-        await updateDoc(idRef, {
+        const profileRef = doc(db, 'faceid', profile);
+        await updateDoc(profileRef, {
             imageRefs: arrayUnion(ref)
         });
     } catch(error){
@@ -46,10 +46,10 @@ const addImageRef = async(id : string, ref : string) => {
     }
 };
 
-const deleteImageRef = async(id : string, ref : string) => {
+const deleteImageRef = async(profile : string, ref : string) => {
     try{
-        const idRef = doc(db, 'faceid', id);
-        await updateDoc(idRef, {
+        const profileRef = doc(db, 'faceid', profile);
+        await updateDoc(profileRef, {
             imageRefs: arrayRemove(ref)
         });
     } catch(error){
@@ -59,10 +59,10 @@ const deleteImageRef = async(id : string, ref : string) => {
 };
 
 export {
-    getIds,
-    getIdData,
+    getProfiles,
+    getProfileData,
 
-    createNewID,
+    createNewProfile,
     addImageRef,
     deleteImageRef,
 }

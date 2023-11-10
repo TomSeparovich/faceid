@@ -1,8 +1,8 @@
 import './dbmanage.css';
 
 import { useEffect, useState } from "react";
-import { createNewID, getIdData, getIds } from "../../services/fb_firestore";
-import Profile from '../../interfaces/idProfile';
+import { createNewProfile, getProfileData, getProfiles } from "../../services/fb_firestore";
+import Profile from '../../interfaces/profile';
 
 
 const DbManage: React.FC = () => {
@@ -32,18 +32,18 @@ const DbManage: React.FC = () => {
 
     const getProfiles = async () => {
         try {
-          const data = await getIdData();
+          const data = await getProfileData();
           setProfileList(data);
         } catch (error) {
           console.error('Error fetching data:', error);
         }
       };
 
-    const createNewProfile = () => {
+    const createProfile = () => {
         try{
             if(fName == null) throw new Error('First Name is null');
             if(lName == null) throw new Error('Last Name is null');
-            createNewID(fName, lName).then(() => {
+            createNewProfile(fName, lName).then(() => {
                 getProfiles();
             })
         } catch(error){
@@ -71,6 +71,11 @@ const DbManage: React.FC = () => {
                 </div>
                 <div>
                     <h2>Stored Images</h2>
+                    {selectedProfile?.imageRefs ? (
+                        <div></div>
+                    ) : (
+                        <div></div>
+                    )}
                     <p>{selectedProfile?.fName} {selectedProfile?.lName}</p>
                 </div>
             </div>
@@ -85,7 +90,7 @@ const DbManage: React.FC = () => {
                         <label>Last Name: </label>
                         <input type="text" value={lName} onChange={(e) => setLName(e.target.value)} />
                     </div>
-                    <button onClick={() => createNewProfile()}>
+                    <button onClick={() => createProfile()}>
                         Create profile
                     </button>
                 </div>
