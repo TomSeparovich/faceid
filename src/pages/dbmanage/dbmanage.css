@@ -1,0 +1,11 @@
+div {
+    border: 10px red;
+}
+
+.body{
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    min-width: 80vw;
+    min-height: 100vh;
+}

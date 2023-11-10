@@ -1,17 +1,23 @@
 import { arrayRemove, arrayUnion, collection, doc, getDocs, setDoc, updateDoc } from "firebase/firestore";
 import { firebase } from "../providers/firebase";
-
+import Profile, { profileConverter } from "../interfaces/idProfile";
 const { db } = firebase;
 
 //Functions for downloading
-const getIDs = async() => {
+const getIds = async() => {
     const idsRef = collection(db, 'faceid');
-    const docs = await getDocs(idsRef);
+    return await getDocs(idsRef);
+};
+
+const getIdData = async() => {
+    const docs = await getIds();
+    const data: Profile[] = [];
 
     docs.forEach((doc) => {
-        const data = doc.data()
-        console.log(data);
-    })
+        data.push(profileConverter.fromFirestore(doc.data()));
+    });
+
+    return data;
 };
 
 //Function for uploading
@@ -53,7 +59,8 @@ const deleteImageRef = async(id : string, ref : string) => {
 };
 
 export {
-    getIDs,
+    getIds,
+    getIdData,
 
     createNewID,
     addImageRef,
