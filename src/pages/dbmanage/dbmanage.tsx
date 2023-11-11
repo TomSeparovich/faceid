@@ -1,7 +1,7 @@
 import './dbmanage.css';
 
 import { useEffect, useState } from "react";
-import { addImageRef, createNewProfile, getProfileData, getProfiles } from "../../services/fb_firestore";
+import { addImageRef, createNewProfile, getProfileData } from "../../services/fb_firestore";
 import Profile from '../../interfaces/profile';
 import { uploadImage } from '../../services/fb_storage';
 
@@ -10,8 +10,10 @@ const DbManage: React.FC = () => {
     const [selectedFiles, setSelectedFiles] = useState<FileList | null>(null);
     const [profileList, setProfileList] = useState<Profile[] | null>(null);
     const [selectedProfile, setSelectedProfile] = useState<Profile | null>(null);
+    const [selectedImage, setSelectedImage] = useState<File | null>(null);
     const [fName, setFName] = useState('');
     const [lName, setLName] = useState('');
+
 
     //This is called when the page is loaded
     useEffect(() => {
@@ -25,7 +27,12 @@ const DbManage: React.FC = () => {
 
     const handleSelectProfile = (profile : any) => {
         setSelectedProfile(profile);
-    }
+        setSelectedImage(null);
+    };
+
+    const handleSelectImage = (image : any) => {
+        setSelectedImage(image);
+    };
 
     const getProfiles = async () => {
         try {
@@ -71,28 +78,7 @@ const DbManage: React.FC = () => {
 
     return (
         <div className="body">
-            <div>
-                <div>
-                    <h2>Stored Profiles</h2>
-                    {profileList?.map((result, index) => (
-                        <tr key={index}>
-                            <td>
-                                <button onClick={() => handleSelectProfile(result)}>
-                                    {result.fName} {result.lName}
-                                </button>
-                            </td>
-                        </tr>
-                    ))}
-                </div>
-                <div>
-                    <h2>Stored Images</h2>
-                    {selectedProfile?.imageRefs?.map((file, index) => (
-                        <img src={file} alt={`Uploaded Image ${index}`} key={index} />
-                    ))}
-                    <p>{selectedProfile?.fName} {selectedProfile?.lName}</p>
-                </div>
-            </div>
-            <div>
+            <div className="leftColumn">
                 <div>
                     <h2>Create new profile</h2>
                     <div className="search-bar">
@@ -114,7 +100,47 @@ const DbManage: React.FC = () => {
                         Upload
                     </button>
                 </div>
-                
+                <div>
+                    <h2>Delete profile</h2>
+                    {selectedProfile ? (
+                        <button>
+                        Delete: {selectedProfile.fName} {selectedProfile.lName}
+                        </button>
+                    ) : (
+                        <p>Please select a profile</p>
+                    )}
+
+                    <h2>Delete Image</h2>
+                    {selectedImage ? (
+                        <button>
+                        Delete
+                        </button>
+                    ) : (
+                        <p>Please select an image</p>
+                    )}
+                </div>
+            </div>
+            <div className="rightColumn">
+                <div className="profiles">
+                    <h2>Stored Profiles</h2>
+                    {profileList?.map((result, index) => (
+                        <tr key={index}>
+                            <td>
+                                <button onClick={() => handleSelectProfile(result)}>
+                                    {result.fName} {result.lName}
+                                </button>
+                            </td>
+                        </tr>
+                    ))}
+                </div>
+                <div>
+                    <h2>Stored Images</h2>
+                    {selectedProfile?.imageRefs?.map((file, index) => (
+                        <button onClick={() => handleSelectImage(file)}>
+                            <img src={file} alt={`Uploaded Image ${index}: ${file}`} key={index} />
+                        </button>
+                    ))}
+                </div>
             </div>
         </div>
     )

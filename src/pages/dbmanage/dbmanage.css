@@ -4,13 +4,35 @@ div {
 
 img {
     max-height: 400px;
+    max-width: 500px;
     margin: 5px;
+}
+
+tr {
+    margin: 5px;
+}
+
+button {
+
 }
 
 .body{
     display: flex;
-    justify-content: space-between;
+    justify-content: left;
     align-items: flex-start;
     min-width: 80vw;
     min-height: 100vh;
+    margin: 5px;
+}
+
+.leftColumn{
+    flex: 0 0 15%;
+}
+
+.rightColumn{
+    flex: 1;
+}
+
+.profiles{
+    max-height: 3%;
 }

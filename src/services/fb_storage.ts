@@ -5,7 +5,7 @@ const { storage } = firebase;
 
 //Functions for downloading images
 const getImage = async(ref : string) => {
-
+//unsure on if implementation is needed
 };
 
 //Functions for Uploading
