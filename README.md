@@ -2,6 +2,10 @@
 This project is being to developed to allow for the batch automation of photos
 being grouped based on the faces within the image. The project will use face-api.js
 
+Identified Bugs:
+    When uploading a duplicate image, it overrides within the bucket but adds an additional
+    reference to the profiles imageRefs causing the image to be called twice
+
 Current Features:
 
 Potential Features:
@@ -21,7 +25,6 @@ Potential Features:
     Image cropping to mimimise waste within the face library
     Adding to the face library
     Verifying faces match within the face library
-
 
 To be considered:
     Animal detection
