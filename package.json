@@ -10,6 +10,9 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@tensorflow/tfjs-node": "^4.13.0",
+    "canvas": "^2.11.2",
+    "face-api.js": "^0.22.2",
     "firebase": "^10.5.2",
     "localforage": "^1.10.0",
     "match-sorter": "^6.3.1",
