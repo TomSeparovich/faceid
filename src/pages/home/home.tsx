@@ -9,7 +9,7 @@ const Home: React.FC = () => {
 
   useEffect(() => {
     loadModals().then(() => {
-      setModelStatus('Modals Loaded');
+      setModelStatus('Models Loaded');
     });
   }, []);
 
