@@ -9,7 +9,7 @@ const Home: React.FC = () => {
             <h2>Navigation</h2>
             <nav>
               <ul>
-                <li><Link to={`faceid`}>FaceID</Link></li>
+                <li><Link to={`imageprocessing`}>Image Processing</Link></li>
                 <li><Link to={`dbmanage`}>Database Management</Link></li>
                 <li><Link to={''}>Home</Link></li>
               </ul>

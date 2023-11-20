@@ -5,7 +5,7 @@ import {
   RouterProvider,
 } from 'react-router-dom';
 
-import { DbManage, FaceID, Home } from './pages/index.ts';
+import { DbManage, ImageProcessing, Home } from './pages/index.ts';
 import ErrorPage from './pages/error/error.tsx';
 import './index.css'
 import { FireBaseProvider } from './providers/firebase.tsx';
@@ -18,8 +18,8 @@ const router = createBrowserRouter([
     errorElement: <ErrorPage />,
     children: [
       {
-        path: "faceid",
-        element: <FaceID />
+        path: "imageProcessing",
+        element: <ImageProcessing />
       },
       {
         path: "dbmanage",

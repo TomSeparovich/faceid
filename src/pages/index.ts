@@ -1,10 +1,10 @@
-import FaceID from "./faceid/faceid";
+import ImageProcessing from "./imageProcessing/imageProcessing";
 import Home from "./home/home";
 import DbManage from "./dbmanage/dbmanage";
 
 
 export {
-    FaceID,
+    ImageProcessing,
     Home,
     DbManage,
 }

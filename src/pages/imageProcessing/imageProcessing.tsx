@@ -1,7 +1,7 @@
 import { useState } from "react";
-import "./faceid.css";
+import "./imageProcessing.css";
 
-const FaceID: React.FC = () => {
+const ImageProcessing: React.FC = () => {
     const [selectedFiles, setSelectedFiles] = useState<FileList | null>(null);
 
     const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -39,4 +39,4 @@ const FaceID: React.FC = () => {
     )
 };
 
-export default FaceID;
+export default ImageProcessing;
