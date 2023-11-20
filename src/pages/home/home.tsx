@@ -10,7 +10,9 @@ const Home: React.FC = () => {
   useEffect(() => {
     loadModals().then(() => {
       setModelStatus('Models Loaded');
-      loadLabeledImages();
+      loadLabeledImages().then(() => {
+        setModelStatus('Images loaded');
+      });
     });
   }, []);
 
