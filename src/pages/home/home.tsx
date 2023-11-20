@@ -1,7 +1,7 @@
 import { Link, Outlet } from 'react-router-dom';
 import './home.css';
 
-import { loadModals } from '../../services/faceid';
+import { loadLabeledImages, loadModals } from '../../services/faceid';
 import { useEffect, useState } from 'react';
 
 const Home: React.FC = () => {
@@ -10,6 +10,7 @@ const Home: React.FC = () => {
   useEffect(() => {
     loadModals().then(() => {
       setModelStatus('Models Loaded');
+      loadLabeledImages();
     });
   }, []);
 

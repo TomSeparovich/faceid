@@ -36,8 +36,7 @@ const DbManage: React.FC = () => {
 
     const getProfiles = async () => {
         try {
-          const data = await getProfileData();
-          setProfileList(data);
+          setProfileList(await getProfileData());
         } catch (error) {
           console.error('Error fetching data:', error);
         }
