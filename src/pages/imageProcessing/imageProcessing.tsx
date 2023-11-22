@@ -7,7 +7,8 @@ import * as faceapi from 'face-api.js';
 const ImageProcessing: React.FC = () => {
     const [selectedFiles, setSelectedFiles] = useState<FileList | null>(null);
     const [profileStatus, setProfileStatus] = useState<string>('No profiles loaded');
-    const [faceDescriptors, setFaceDescriptors] = useState<Array<faceapi.LabeledFaceDescriptors> | null>(null); 
+    const [faceDescriptors, setFaceDescriptors] = useState<Array<faceapi.LabeledFaceDescriptors> | null>(null);
+    const [processStatus, setProcessStatus] = useState<boolean>(false); 
 
 
     const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -16,25 +17,41 @@ const ImageProcessing: React.FC = () => {
     };
 
     const loadProfiles = async() => {
-        setFaceDescriptors(await loadLabeledImages());
-        setProfileStatus('Profiles Loaded');
+        try{
+            setProfileStatus('Profiles loading');
+            setFaceDescriptors(await loadLabeledImages());
+            setProfileStatus('Profiles Loaded');
+        } catch(error){
+            console.log('Error loading profiles: ', error);
+            throw error;
+        }
     };
-
-    //Should add preventitive measure to stop button being pressed again
+    
     const processFiles = async() => {
-        if(!selectedFiles) return; //Ensure there are selected files
-        const files = selectedFiles; //This will allow a user to select files for next upload without affect the current process
-        const faceMatcher = new faceapi.FaceMatcher(faceDescriptors, 0.6)
+        try{
+            if(!selectedFiles) throw new Error('No files selected'); 
+            if(profileStatus !== 'Profiles Loaded') throw new Error(profileStatus);
+            if(processStatus) throw new Error('Currently processing files');
+            setProcessStatus(true);
 
-        for(const file of files){
-            const results = await faceapi
-            .detectAllFaces(await faceapi.bufferToImage(file))
-            .withFaceLandmarks()
-            .withFaceDescriptors();
-            for(const result of results){
-                const bestMatch = faceMatcher.findBestMatch(result.descriptor);
-                console.log(bestMatch.toString());
+            const files = selectedFiles; //This will allow a user to select files for next upload without affect the current process
+            const faceMatcher = new faceapi.FaceMatcher(faceDescriptors, 0.6)//Change this number to modify the certainty rating 
+
+            for(const file of files){
+                const results = await faceapi
+                .detectAllFaces(await faceapi.bufferToImage(file))
+                .withFaceLandmarks()
+                .withFaceDescriptors();
+                for(const result of results){
+                    const bestMatch = faceMatcher.findBestMatch(result.descriptor);
+                    console.log(bestMatch.toString());
+                }
             }
+            setProcessStatus(false);
+        } catch(error){
+            setProcessStatus(false);
+            console.log('Failed to process images: ', error);
+            throw error;
         }
     };
 
