@@ -1,13 +1,13 @@
 import * as faceapi from 'face-api.js';
 import { getProfileData } from './fb_firestore';
 
-const loadModals = async () => {
+const loadModals = async() => {
     await faceapi.nets.ssdMobilenetv1.loadFromUri('/models');
     await faceapi.nets.faceLandmark68Net.loadFromUri('/models');
     await faceapi.nets.faceRecognitionNet.loadFromUri('/models');
 };
 
-const loadLabeledImages = async () => {
+const loadLabeledImages = async() => {
     const profiles = await getProfileData();
     let labeledFaceDescriptors : Array<faceapi.LabeledFaceDescriptors> = [];
 
@@ -19,7 +19,7 @@ const loadLabeledImages = async () => {
             const img = await faceapi.fetchImage(imageRef);
             const detections = await faceapi.detectSingleFace(img).withFaceLandmarks().withFaceDescriptor();
             if(detections != null){
-                faceDescriptors.push(detections?.descriptor);
+                faceDescriptors.push(detections.descriptor);
             }
         }
 
@@ -29,6 +29,10 @@ const loadLabeledImages = async () => {
     }
 
     return labeledFaceDescriptors;
+};
+
+const cropImage = async() => {
+
 };
 
 export {

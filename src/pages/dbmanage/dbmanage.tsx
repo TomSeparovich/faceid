@@ -4,13 +4,16 @@ import { useEffect, useState } from "react";
 import { addImageRef, createNewProfile, getProfileData } from "../../services/fb_firestore";
 import Profile from '../../interfaces/profile';
 import { uploadImage } from '../../services/fb_storage';
+import { imag } from '@tensorflow/tfjs-node';
 
 
 const DbManage: React.FC = () => {
     const [selectedFiles, setSelectedFiles] = useState<FileList | null>(null);
     const [profileList, setProfileList] = useState<Profile[] | null>(null);
     const [selectedProfile, setSelectedProfile] = useState<Profile | null>(null);
-    const [selectedImage, setSelectedImage] = useState<File | null>(null);
+    const [imageIndex, setImageIndex] = useState<number>(0);
+
+    //Pretty sure these can get removed with minimal effort
     const [fName, setFName] = useState('');
     const [lName, setLName] = useState('');
 
@@ -26,12 +29,8 @@ const DbManage: React.FC = () => {
     };
 
     const handleSelectProfile = (profile : any) => {
+        setImageIndex(0);
         setSelectedProfile(profile);
-        setSelectedImage(null);
-    };
-
-    const handleSelectImage = (image : any) => {
-        setSelectedImage(image);
     };
 
     const getProfiles = async () => {
@@ -75,10 +74,39 @@ const DbManage: React.FC = () => {
         }
     };
 
+    const increaseIndex = () => {
+        if(selectedProfile == null) return;
+        setImageIndex(imageIndex + 1);
+        if(imageIndex == selectedProfile.imageRefs.length - 1){
+            setImageIndex(0);
+        }
+    };
+    
+    const decreaseIndex = () => {
+        if(selectedProfile == null) return;
+        if(selectedProfile.imageRefs.length == 0) return;
+        setImageIndex(imageIndex - 1);
+        if(imageIndex == 0){
+            setImageIndex(selectedProfile.imageRefs.length - 1);
+        }
+    };
+
     return (
         <div className="body">
             <div className="leftColumn">
-                <div>
+                <h2>Profiles</h2>
+                {profileList?.map((result, index) => (
+                    <tr key={index}>
+                        <td>
+                            <button onClick={() => handleSelectProfile(result)}>
+                                {result.fName} {result.lName}
+                            </button>
+                        </td>
+                    </tr>
+                ))}
+                <h2></h2>
+                <button> Create New Profile </button>
+                <div className="createProfile">
                     <h2>Create new profile</h2>
                     <div className="search-bar">
                         <label>First Name: </label>
@@ -92,54 +120,42 @@ const DbManage: React.FC = () => {
                         Create profile
                     </button>
                 </div>
-                <div>
-                    <h2>Upload Images</h2>
-                    <input type="file" onChange={handleFileChange} multiple />
-                    <button onClick={() => uploadImages()}>
-                        Upload
-                    </button>
-                </div>
-                <div>
-                    <h2>Delete profile</h2>
-                    {selectedProfile ? (
-                        <button>
-                        Delete: {selectedProfile.fName} {selectedProfile.lName}
-                        </button>
-                    ) : (
-                        <p>Please select a profile</p>
-                    )}
-
-                    <h2>Delete Image</h2>
-                    {selectedImage ? (
-                        <button>
-                        Delete
-                        </button>
-                    ) : (
-                        <p>Please select an image</p>
-                    )}
-                </div>
             </div>
-            <div className="rightColumn">
-                <div className="profiles">
-                    <h2>Stored Profiles</h2>
-                    {profileList?.map((result, index) => (
-                        <tr key={index}>
-                            <td>
-                                <button onClick={() => handleSelectProfile(result)}>
-                                    {result.fName} {result.lName}
-                                </button>
-                            </td>
-                        </tr>
-                    ))}
-                </div>
+            <div className="rightColumn"> 
+            {selectedProfile ? (
                 <div>
-                    <h2>Stored Images</h2>
-                    {selectedProfile?.imageRefs?.map((file, index) => (
-                        <button onClick={() => handleSelectImage(file)}>
-                            <img src={file} alt={`Uploaded Image ${index}: ${file}`} key={index} />
+                    <h2>Profile: {selectedProfile.fName} {selectedProfile.lName} </h2>
+                    {selectedProfile?.imageRefs?.length > 0 ? (
+                        <div className="storedImages">
+                            <h3>Stored Images</h3>
+                            <div className="imageControl">
+                                <button onClick={decreaseIndex}>{'<'}</button>
+                                <p>{imageIndex + 1}</p>
+                                <button onClick={increaseIndex}>{'>'}</button>
+                            </div>
+                            <button>
+                                <img src={selectedProfile?.imageRefs?.at(imageIndex)}/>
+                            </button>
+                        </div>
+                    ) : (
+                        <div>
+                            No stored images
+                        </div>
+                    )}
+                    
+                    <h4>Delete Image</h4>
+                    <div className="imageUpload">
+                        <h3>Upload Images</h3>
+                        <input type="file" onChange={handleFileChange} multiple />
+                        <button onClick={() => uploadImages()}>
+                            Upload
                         </button>
-                    ))}
+                    </div>
+                    <button> Delete: {selectedProfile.fName} {selectedProfile.lName} </button>
                 </div>
+            ) : (
+                <div>No Profile Selected</div>
+            )}
             </div>
         </div>
     )
