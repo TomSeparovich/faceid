@@ -13,6 +13,7 @@ const DbManage: React.FC = () => {
     const [profileList, setProfileList] = useState<Profile[] | null>(null);
     const [selectedProfile, setSelectedProfile] = useState<Profile | null>(null);
     const [imageIndex, setImageIndex] = useState<number>(0);
+    const [faceIndex, setFaceIndex] = useState<number>(0);
     
 
     //Pretty sure these can get removed with minimal effort
@@ -58,6 +59,7 @@ const DbManage: React.FC = () => {
     const processImages = async() => {
         try{
             if(selectedFiles == null || selectedFiles?.length == 0) throw new Error('No files selected');
+            setFaceIndex(0);
             setUploadedFaces([]);
 
             for(const file of selectedFiles){
@@ -91,6 +93,11 @@ const DbManage: React.FC = () => {
         }
     };
 
+    const deleteFaceByIndex = () => {
+        setUploadedFaces(prevFaces => prevFaces.filter((_, index) => index !== faceIndex));
+        setFaceIndex(faceIndex-1);
+    }
+
     const increaseIndex = () => {
         if(selectedProfile == null) return;
         setImageIndex(imageIndex + 1);
@@ -105,6 +112,20 @@ const DbManage: React.FC = () => {
         setImageIndex(imageIndex - 1);
         if(imageIndex == 0){
             setImageIndex(selectedProfile.imageRefs.length - 1);
+        }
+    };
+
+    const increaseFaceIndex = () => {
+        setFaceIndex(faceIndex + 1);
+        if(faceIndex >= uploadedFaces.length - 1){
+            setFaceIndex(0);
+        }
+    };
+    
+    const decreaseFaceIndex = () => {
+        setFaceIndex(faceIndex - 1);
+        if(faceIndex <= 0){
+            setFaceIndex(uploadedFaces.length - 1);
         }
     };
 
@@ -177,15 +198,24 @@ const DbManage: React.FC = () => {
                     </button>
                 </div>
                 <div>
-                    <h3>Faces</h3>
-                    {uploadedFaces.map((blob, index) => (
-                        <img
-                        key={index}
-                        src={URL.createObjectURL(blob)}
-                        alt={`face-${index}`}
-                        />
-                    ))}
-                    <button onClick={uploadFaces}>Upload Faces</button>
+                    {uploadedFaces.length > 0 ? (
+                    <div>
+                        <h3>Faces</h3>
+                        <div className="imageControl">
+                            <button onClick={decreaseFaceIndex}>{'<'}</button>
+                            <p>{faceIndex + 1}</p>
+                            <button onClick={increaseFaceIndex}>{'>'}</button>
+                        </div>
+                        <div>
+                            <img src={URL.createObjectURL(uploadedFaces[faceIndex])}/>
+                        </div>
+                        <button onClick={deleteFaceByIndex}>Delete Face</button>
+                        <button onClick={uploadFaces}>Upload Faces</button>
+                    </div>
+                    ) : (
+                    <div></div>
+                    )}
+                    
                 </div>
             </div>
         </div>
