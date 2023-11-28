@@ -133,9 +133,10 @@ const DbManage: React.FC = () => {
                                 <p>{imageIndex + 1}</p>
                                 <button onClick={increaseIndex}>{'>'}</button>
                             </div>
-                            <button>
+                            <div>
                                 <img src={selectedProfile?.imageRefs?.at(imageIndex)}/>
-                            </button>
+                            </div>
+                            <button>Delete Image</button>
                         </div>
                     ) : (
                         <div>
@@ -143,7 +144,6 @@ const DbManage: React.FC = () => {
                         </div>
                     )}
                     
-                    <h4>Delete Image</h4>
                     <div className="imageUpload">
                         <h3>Upload Images</h3>
                         <input type="file" onChange={handleFileChange} multiple />

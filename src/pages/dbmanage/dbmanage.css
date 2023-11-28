@@ -36,3 +36,7 @@ button {
 .profiles{
     max-height: 3%;
 }
+
+.imageControl div{
+    flex-direction: row;
+}
