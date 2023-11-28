@@ -76,14 +76,15 @@ const DbManage: React.FC = () => {
         try{
             if(selectedProfile == null) throw new Error('No selected profile');
             if(uploadedFaces == null) throw new Error('No selected files');
+            const profile = `${selectedProfile.fName}${selectedProfile.lName}`;
 
             for(const face of uploadedFaces){
-                const profile = `${selectedProfile.fName}${selectedProfile.lName}`;
+                
                 const ref = await uploadImage(face, profile);
                 await addImageRef(ref, profile);
             }
             getProfiles();
-
+            //THIS REFRESH ISNT WORKING CURRENTLY 
             setSelectedProfile(profileList?.find(
                 (profile) => profile.fName === selectedProfile.fName && profile.lName === selectedProfile.lName)
                 ?? null);
@@ -95,7 +96,9 @@ const DbManage: React.FC = () => {
 
     const deleteFaceByIndex = () => {
         setUploadedFaces(prevFaces => prevFaces.filter((_, index) => index !== faceIndex));
-        setFaceIndex(faceIndex-1);
+        if(faceIndex != 0){
+            decreaseFaceIndex();
+        }
     }
 
     const increaseIndex = () => {
