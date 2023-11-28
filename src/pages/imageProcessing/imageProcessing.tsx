@@ -17,6 +17,7 @@ const ImageProcessing: React.FC = () => {
     const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const { files } = event.target;
         if(files) setSelectedFiles(files);
+        //SHOULD THIS EXIST
         setFaceDescriptors([]);
     };
 

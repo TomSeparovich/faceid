@@ -31,12 +31,41 @@ const loadLabeledImages = async() => {
     return labeledFaceDescriptors;
 };
 
-const cropImage = async() => {
+const cropImage = async(file : File) => {
+    try{
+        const img = await faceapi.bufferToImage(file)
 
+        const result = await faceapi.detectAllFaces(img);
+
+        if(result == undefined) throw new Error("No face detected");
+
+        const faces = await faceapi.extractFaces(img, result);
+        const blobsPromises: Promise<Blob | null>[] = [];
+
+        for(const face of faces){
+            const blobPromise = new Promise<Blob | null>((resolve) => {
+                face.toBlob((blob) => {
+                    resolve(blob);
+                });
+            });
+            blobsPromises.push(blobPromise);
+        }
+
+        const blobs = await Promise.all(blobsPromises);
+
+        const filteredBlobs = blobs.filter((blob) => blob !== null) as Blob[];
+
+        console.log(filteredBlobs.length, ' Faces detected');
+        return filteredBlobs;
+
+    } catch(error){
+        console.log("Error extracting face: ", error);
+        throw error;
+    }
 };
 
 export {
     loadModals,
     loadLabeledImages,
-
+    cropImage,
 };

@@ -1,5 +1,6 @@
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { firebase } from "../providers/firebase";
+import {v4 as uuidv4} from 'uuid';
 
 const { storage } = firebase;
 
@@ -9,9 +10,9 @@ const getImage = async(ref : string) => {
 };
 
 //Functions for Uploading
-const uploadImage = async(image : File, name : string) => {
+const uploadImage = async(image : Blob, name : string) => {
     try {
-        const storageRef = ref(storage, `${name}/${image.name}`);
+        const storageRef = ref(storage, `${name}/${uuidv4()}`);
         await uploadBytes(storageRef, image);
         return await getDownloadURL(storageRef);
       } catch (error) {

@@ -4,14 +4,16 @@ import { useEffect, useState } from "react";
 import { addImageRef, createNewProfile, getProfileData } from "../../services/fb_firestore";
 import Profile from '../../interfaces/profile';
 import { uploadImage } from '../../services/fb_storage';
-import { imag } from '@tensorflow/tfjs-node';
+import { cropImage } from '../../services/faceid';
 
 
 const DbManage: React.FC = () => {
     const [selectedFiles, setSelectedFiles] = useState<FileList | null>(null);
+    const [uploadedFaces, setUploadedFaces] = useState<Array<Blob>>([]);
     const [profileList, setProfileList] = useState<Profile[] | null>(null);
     const [selectedProfile, setSelectedProfile] = useState<Profile | null>(null);
     const [imageIndex, setImageIndex] = useState<number>(0);
+    
 
     //Pretty sure these can get removed with minimal effort
     const [fName, setFName] = useState('');
@@ -53,14 +55,29 @@ const DbManage: React.FC = () => {
         }
     }
 
-    const uploadImages = async() => {
+    const processImages = async() => {
         try{
-            if(selectedProfile == null) throw new Error('No selected profile');
-            if(selectedFiles == null) throw new Error('No selected files');
+            if(selectedFiles == null || selectedFiles?.length == 0) throw new Error('No files selected');
+            setUploadedFaces([]);
 
             for(const file of selectedFiles){
+                var faces = await cropImage(file);
+                if(faces == undefined) throw new Error('Error processing file');
+                setUploadedFaces(prevFaces => [...prevFaces, ...faces]);
+            }
+        } catch(error){
+            console.log(error);
+        }
+    };
+
+    const uploadFaces = async() => {
+        try{
+            if(selectedProfile == null) throw new Error('No selected profile');
+            if(uploadedFaces == null) throw new Error('No selected files');
+
+            for(const face of uploadedFaces){
                 const profile = `${selectedProfile.fName}${selectedProfile.lName}`;
-                const ref = await uploadImage(file, profile);
+                const ref = await uploadImage(face, profile);
                 await addImageRef(ref, profile);
             }
             getProfiles();
@@ -144,18 +161,32 @@ const DbManage: React.FC = () => {
                         </div>
                     )}
                     
-                    <div className="imageUpload">
-                        <h3>Upload Images</h3>
-                        <input type="file" onChange={handleFileChange} multiple />
-                        <button onClick={() => uploadImages()}>
-                            Upload
-                        </button>
-                    </div>
                     <button> Delete: {selectedProfile.fName} {selectedProfile.lName} </button>
                 </div>
             ) : (
                 <div>No Profile Selected</div>
             )}
+            </div>
+            <div>
+                <h2>Upload Images</h2>
+                <div className="imageUpload">
+                    <h3>Select Images</h3>
+                    <input type="file" onChange={handleFileChange} multiple />
+                    <button onClick={() => processImages()}>
+                        Process
+                    </button>
+                </div>
+                <div>
+                    <h3>Faces</h3>
+                    {uploadedFaces.map((blob, index) => (
+                        <img
+                        key={index}
+                        src={URL.createObjectURL(blob)}
+                        alt={`face-${index}`}
+                        />
+                    ))}
+                    <button onClick={uploadFaces}>Upload Faces</button>
+                </div>
             </div>
         </div>
     )
