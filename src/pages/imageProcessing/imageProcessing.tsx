@@ -2,8 +2,7 @@ import { useState } from "react";
 import "./imageProcessing.css";
 import { loadLabeledImages } from "../../services/faceid";
 import * as faceapi from 'face-api.js';
-import FileNames from "../../interfaces/file";
- 
+import FileNames from "../../interfaces/file"; 
 
 const ImageProcessing: React.FC = () => {
     const [selectedFiles, setSelectedFiles] = useState<FileList | null>(null);
@@ -105,13 +104,23 @@ const ImageProcessing: React.FC = () => {
                 <p>{profileStatus}</p>
                 <p>*This will eventually be a selector so you can select who you want to id</p>
             </div>
+            {outputFiles.length > 0 ? (
             <div>
                 <div className="imageControl">
                     <button onClick={decreaseIndex}>{'<'}</button>
                     <p>{imageIndex + 1}</p>
                     <button onClick={increaseIndex}>{'>'}</button>
                 </div>
+                <div>
+                    <img src={URL.createObjectURL(outputFiles[imageIndex]?.file)}/>
+                    <ul>
+                        {outputFiles[imageIndex]?.names.map((name, index) => (
+                            <li key={index}>{name}</li>
+                        ))}
+                    </ul>
+                </div>
             </div>
+            ) : (<div></div>)}
             <div>
                 {selectedFiles ? (
                     <div>
