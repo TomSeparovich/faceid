@@ -3,27 +3,29 @@ This project is being to developed to allow for the batch automation of photos
 being grouped based on the faces within the image. The project will use face-api.js
 
 Identified Bugs:
-    When uploading a duplicate image, it overrides within the bucket but adds an additional
-    reference to the profiles imageRefs causing the image to be called twice
+    --When uploading a duplicate image, it overrides within the bucket but adds an additional
+        reference to the profiles imageRefs causing the image to be called twice
+        RESOLVED, upload now uses UUID for each name, removing this issue
 
 Current Features:
-
-Potential Features:
     File upload
     Bulk file upload
-    Alternate file types ie .heic, need to verify if works on its own
 
     Facial recognition
     Face library
-    Firebase backend for face library?
-
-    Image grouping/tagging based on recognised faces
-    To be processed stack for unrecognised faces
+    Firebase backend for face library
 
     Creating new entries based on the face library
     Viewing the face library
     Image cropping to mimimise waste within the face library
     Adding to the face library
+
+Potential Features:
+    Alternate file types ie .heic, need to verify if works on its own    
+
+    Image grouping/tagging based on recognised faces
+    To be processed stack for unrecognised faces
+
     Verifying faces match within the face library
 
 To be considered:
