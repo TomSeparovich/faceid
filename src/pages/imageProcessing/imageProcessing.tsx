@@ -2,6 +2,7 @@ import { useState } from "react";
 import "./imageProcessing.css";
 import { loadLabeledImages } from "../../services/faceid";
 import * as faceapi from 'face-api.js';
+import FileNames from "../../interfaces/file";
  
 
 const ImageProcessing: React.FC = () => {
@@ -10,6 +11,9 @@ const ImageProcessing: React.FC = () => {
     const [faceDescriptors, setFaceDescriptors] = useState<Array<faceapi.LabeledFaceDescriptors> | null>(null);
     const [profileStatus, setProfileStatus] = useState<string>('No profiles loaded');
     const [processStatus, setProcessStatus] = useState<boolean>(false); 
+
+    const [outputFiles, setOutputFiles] = useState<Array<FileNames>>([]);
+    const [imageIndex, setImageIndex] = useState<number>(0);
     
     
 
@@ -17,8 +21,6 @@ const ImageProcessing: React.FC = () => {
     const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const { files } = event.target;
         if(files) setSelectedFiles(files);
-        //SHOULD THIS EXIST
-        setFaceDescriptors([]);
     };
 
     const loadProfiles = async() => {
@@ -55,7 +57,13 @@ const ImageProcessing: React.FC = () => {
                     const bestMatch = faceMatcher.findBestMatch(result.descriptor);
                     names.push(bestMatch.toString());
                 }
-                setDetectedFaces(prevDetectedFaces => [...prevDetectedFaces, ...names]);
+
+                const output : FileNames = {
+                    names : names,
+                    file : file,
+                }
+                setOutputFiles(prevOutputFiles => [...prevOutputFiles, output])
+
                 for(const name of detectedFaces){
                     console.log(name);
                 }
@@ -65,6 +73,20 @@ const ImageProcessing: React.FC = () => {
             setProcessStatus(false);
             console.log('Failed to process images: ', error);
             throw error;
+        }
+    };
+
+    const increaseIndex = () => {
+        setImageIndex(imageIndex + 1);
+        if(imageIndex >= outputFiles.length - 1){
+            setImageIndex(0);
+        }
+    };
+    
+    const decreaseIndex = () => {
+        setImageIndex(imageIndex - 1);
+        if(imageIndex <= 0){
+            setImageIndex(outputFiles.length - 1);
         }
     };
 
@@ -82,6 +104,13 @@ const ImageProcessing: React.FC = () => {
                 <button onClick={loadProfiles}>Load Profiles</button>
                 <p>{profileStatus}</p>
                 <p>*This will eventually be a selector so you can select who you want to id</p>
+            </div>
+            <div>
+                <div className="imageControl">
+                    <button onClick={decreaseIndex}>{'<'}</button>
+                    <p>{imageIndex + 1}</p>
+                    <button onClick={increaseIndex}>{'>'}</button>
+                </div>
             </div>
             <div>
                 {selectedFiles ? (

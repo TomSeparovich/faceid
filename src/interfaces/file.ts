@@ -1,8 +1,10 @@
 
-interface file {
-    //name or individuals
-    //file
-    //file 2 for heic and shit to not remove data
+interface File {
 
+    names : Array<String>,
+    file : File,
+    //heicFile : File,
     
 }
+
+export default File;
