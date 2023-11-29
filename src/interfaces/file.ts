@@ -1,5 +1,5 @@
 
-interface File {
+interface FileNames {
 
     names : Array<String>,
     file : File,
@@ -7,4 +7,4 @@ interface File {
     
 }
 
-export default File;
+export default FileNames;
